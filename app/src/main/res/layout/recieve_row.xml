@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        card_view:cardCornerRadius="15dp"
+        card_view:cardElevation="2dp"
+        card_view:cardUseCompatPadding="true"
+        card_view:contentPadding="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/rounded_textview_price_ad"
+                android:elevation="2dp">
+
+                <TextView
+                    android:id="@+id/txt_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="left|center"
+                    android:text="TestName"
+                    android:textColor="#ff000000"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_toStartOf="@+id/txtPrice"
+                    android:layout_toLeftOf="@+id/txtPrice"
+                    android:paddingLeft="3dp"
+                    android:paddingRight="3dp" />
+
+                <TextView
+                    android:id="@+id/txtPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_gravity="right"
+                    android:gravity="center|right"
+                    android:text="TestPrice"
+                    android:textColor="#ff000000"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="false"
+                    android:background="@drawable/rounded_textview_price_ad"
+                    android:paddingLeft="3dp"
+                    android:paddingRight="3dp"
+                    android:layout_alignBottom="@+id/txt_name" />
+            </RelativeLayout>
+
+                <RelativeLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txt_name"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="1dp">
+
+                    <com.kido.board.util.CircularNetworkImageView
+                        android:id="@+id/img_thumbnail"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginBottom="3dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="3dp"
+                        android:adjustViewBounds="true"
+                        android:layout_marginRight="5dp" />
+
+                    <TextView
+                        android:id="@+id/txt_desc"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:elegantTextHeight="true"
+                        android:text="TestDescription"
+                        android:textColor="#ff000000"
+                        android:textIsSelectable="false"
+                        android:textSize="12sp"
+                        android:padding="3dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginRight="3dp"
+                        android:layout_toRightOf="@+id/img_thumbnail"
+                        android:layout_toEndOf="@+id/img_thumbnail"
+                        android:background="@drawable/rounded_textview_name_ad"
+                        android:elevation="2dp"
+                        android:layout_below="@+id/txt_dateExp"
+                        android:layout_above="@+id/txt_Display" />
+
+                    <TextView
+                        android:id="@+id/txt_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TestDate"
+                        android:textColor="#ff000000"
+                        android:textSize="10sp"
+                        android:gravity="top|right"
+                        android:layout_gravity="right"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true" />
+
+                    <TextView
+                        android:id="@+id/txt_dateExp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TestDateExp"
+                        android:textColor="#ff000000"
+                        android:textSize="10sp"
+                        android:gravity="top|right"
+                        android:layout_gravity="right"
+                        android:layout_below="@+id/txt_date"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true" />
+
+                    <TextView
+                        android:id="@+id/txt_Cat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TestCat"
+                        android:textColor="#ff000000"
+                        android:textSize="10sp"
+                        android:gravity="top|left"
+                        android:layout_gravity="right"
+                        android:layout_toEndOf="@+id/img_thumbnail"
+                        android:layout_toRightOf="@+id/img_thumbnail"
+                        android:layout_alignParentTop="true" />
+
+                    <TextView
+                        android:id="@+id/txt_Region"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TestReg"
+                        android:textColor="#ff000000"
+                        android:textSize="10sp"
+                        android:gravity="top|left"
+                        android:layout_gravity="right"
+                        android:layout_toRightOf="@+id/img_thumbnail"
+                        android:layout_toEndOf="@+id/img_thumbnail"
+                        android:layout_below="@+id/txt_Cat" />
+
+                    <TextView
+                        android:id="@+id/txt_Display"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TestView"
+                        android:textColor="#ff000000"
+                        android:textSize="10sp"
+                        android:gravity="center|right"
+                        android:layout_gravity="right"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignBottom="@+id/img_thumbnail" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/img_display"
+                        android:src="@mipmap/ic_image_display"
+                        android:layout_toStartOf="@+id/txt_Display"
+                        android:layout_below="@+id/txt_desc"
+                        android:layout_toLeftOf="@+id/txt_Display"
+                        android:layout_alignBottom="@+id/img_thumbnail" />
+
+                </RelativeLayout>
+
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+</LinearLayout>
