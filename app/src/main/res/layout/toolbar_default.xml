@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#e54638"
-    android:minHeight="@dimen/abc_action_bar_default_height_material">
+    android:minHeight="@dimen/abc_action_bar_default_height_material"
+    android:foregroundGravity="center_horizontal">
 
 
     <RelativeLayout
@@ -13,7 +14,7 @@
 
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Picty"
@@ -21,6 +22,7 @@
             android:gravity="center"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+            android:foregroundGravity="center_horizontal" />
     </RelativeLayout>
 </android.support.v7.widget.Toolbar>
