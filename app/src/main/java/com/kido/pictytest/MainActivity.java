@@ -1,206 +1,195 @@
 package com.kido.pictytest;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.os.Vibrator;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.animation.OvershootInterpolator;
+import android.view.View;
+import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.software.shell.fab.ActionButton;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-
-import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
-import jp.wasabeef.recyclerview.animators.adapters.AlphaInAnimationAdapter;
-import jp.wasabeef.recyclerview.animators.adapters.ScaleInAnimationAdapter;
+import static com.software.shell.fab.ActionButton.Type.DEFAULT;
 
 public class MainActivity extends AppCompatActivity {
-    Runnable runUpdate;
-    private List<Pict> picts;
-    private CustomSwype mSwipeRefreshLayout;
-    private String TAG = MainActivity.class.toString();
-    private boolean isTaskRunning = false;
-    private RecyclerView recyclerView;
-    private RecyclerView.Adapter mAdapter;
+    public static View view_main;
+    private static ActionButton actionButton;
+    private static boolean isFAB = true;
+    private static boolean bigFAB = false;
     private Toolbar mToolbar;
+    private long lastBackPressTime = 0;
+    private Toast toast;
 
-    {
-        runUpdate = new Runnable() {
-            public void run() {
-                int min = 0;
-                int max = picts.size() - 1;
-                Random r = new Random();
-                int i1 = r.nextInt(max - min + 1) + min;
+    public boolean isFAB() {
+        return isFAB;
+    }
 
-                Pict pictNew = new Pict(picts.get(i1).getId(), picts.get(i1).getUrl(), picts.get(i1).getFlag(), picts.get(i1).getOs());
-                picts.add(0, pictNew);
-                recyclerView.getAdapter().notifyItemInserted(0);
-                recyclerView.scrollToPosition(0);
-                isTaskRunning = false;
-                mSwipeRefreshLayout.setRefreshing(false);
+    public void setIsFAB(boolean isFAB) {
+        this.isFAB = isFAB;
+    }
+
+    public boolean isBigFAB() {
+        return bigFAB;
+    }
+
+    public void setBigFAB(boolean bigFAB) {
+        this.bigFAB = bigFAB;
+    }
+
+    public void updateFAB() {
+        actionButton = (ActionButton) findViewById(R.id.action_button);
+        actionButton.setShowAnimation(ActionButton.Animations.SCALE_UP);
+        actionButton.setHideAnimation(ActionButton.Animations.SCALE_DOWN);
+        actionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Get instance of Vibrator from current Context
+                shotClick();
             }
-        };
+        });
+        if (isFAB) {
+            actionButton.setButtonColor(Color.rgb(223, 48, 41));
+            actionButton.setStrokeColor(Color.WHITE);
+
+            if (!bigFAB) {
+                actionButton.setType(DEFAULT);
+                actionButton.setStrokeWidth(2.5f);
+            } else {
+                actionButton.setType(ActionButton.Type.BIG);
+                actionButton.setStrokeWidth(3.0f);
+            }
+            actionButton.setVisibility(View.VISIBLE);
+        } else {
+            actionButton.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public ActionButton getActionButton() {
+        return actionButton;
+    }
+
+    public void setActionButton(ActionButton actionButton) {
+        MainActivity.actionButton = actionButton;
+    }
+
+    public Toolbar getmToolbar() {
+        return mToolbar;
+    }
+
+    public void setmToolbar(Toolbar mToolbar) {
+        this.mToolbar = mToolbar;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        view_main = (CoordinatorLayout) findViewById(R.id.root_main);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
-        if (picts == null) {
-            picts = new ArrayList<>();
-            picts.add(new Pict(1, "http://data14.gallery.ru/albums/gallery/157320-306a6-39750020-m750x740-udc912.jpg", "br", 1));
-            picts.add(new Pict(2, "http://data14.gallery.ru/albums/gallery/157320-2112e-39750040-m750x740-u699c1.jpg", "ua", 1));
-            picts.add(new Pict(3, "http://data15.gallery.ru/albums/gallery/4819-2d9f3-62127094-m750x740-u1225f.jpg", "usa", 1));
-            picts.add(new Pict(4, "http://data14.gallery.ru/albums/gallery/157320-576e9-39750006-m750x740-ucd76e.jpg", "gb", 1));
-        }
-        recyclerView = (RecyclerView) findViewById(R.id.cardList_get_photos);
-        recyclerView.setHasFixedSize(false);
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(llm);
+        // Create global configuration and initialize ImageLoader with this config
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
+        ImageLoader.getInstance().init(config);
 
-        recyclerView.setItemAnimator(new SlideInUpAnimator(new OvershootInterpolator(1f)));
-//        recyclerView.getItemAnimator().setAddDuration(1000);
-//        recyclerView.getItemAnimator().setRemoveDuration(1000);
-//        recyclerView.getItemAnimator().setMoveDuration(1000);
-//        recyclerView.getItemAnimator().setChangeDuration(1000);
-
-        mAdapter = new PictyAdapter(this, picts);
-        AlphaInAnimationAdapter alphaAdapter = new AlphaInAnimationAdapter(mAdapter);
-        ScaleInAnimationAdapter scaleAdapter = new ScaleInAnimationAdapter(alphaAdapter);
-        scaleAdapter.setFirstOnly(false);
-        scaleAdapter.setInterpolator(new OvershootInterpolator());
+        updateFAB();
 
 
-
-        recyclerView.setAdapter(scaleAdapter);
-
-        mSwipeRefreshLayout = (CustomSwype) findViewById(R.id.id_swype_get_photos);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getShotsFromServer();
-            }
-        });
-        mSwipeRefreshLayout.setColorSchemeColors(Color.BLUE, Color.YELLOW);
-        mSwipeRefreshLayout.setProgressBackgroundColorSchemeColor(Color.WHITE);
-
-        if (isTaskRunning) {
-            mSwipeRefreshLayout.setRefreshing(true);
-        }
         if (savedInstanceState == null) {
-            getShotsFromServer();
-        } else {
-            Gson gson = new GsonBuilder()
-                    .excludeFieldsWithoutExposeAnnotation()
-                    .create();
-            String s = savedInstanceState.getString("picts");
-            Pict[] obj = gson.fromJson(s, Pict[].class);
-            if (obj == null) {
-                picts = new ArrayList<Pict>();
-            } else {
-                picts = new ArrayList<Pict>(Arrays.asList(obj));
-            }
-            mAdapter = new PictyAdapter(this, picts);
-            recyclerView.setAdapter(mAdapter);
+
+            Fragment fragment = new Fragment();
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+            fragment = new MainFragment();
+            fragmentTransaction.replace(R.id.containerMain, fragment);
+            fragmentTransaction.addToBackStack(MainFragment.class.toString());
+            fragmentTransaction.commit();
         }
-
-
     }
 
-    public void getShotsFromServer() {
-        if (!isTaskRunning) {
-            isTaskRunning = true;
-            mSwipeRefreshLayout.setRefreshing(true);
-            Thread t = new Thread(new Runnable() {
-                public void run() {
-                    try {
-                        TimeUnit.SECONDS.sleep(1);
-                        runOnUiThread(runUpdate);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+    public void shotClick() {
+        String ss = getActiveFragment();
+        switch (ss) {
+            case "MainFragment":
+                Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                vibrator.vibrate(50);
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+                Fragment fragment = new CameraFragment();
+                fragmentTransaction.replace(R.id.containerMain, fragment, fragment.getClass().getSimpleName());
+                fragmentTransaction.addToBackStack(CameraFragment.class.getSimpleName());
+                fragmentTransaction.commit();
+                break;
+            case "CameraFragment":
+                CameraFragment fc = (CameraFragment) getFragmentManager().findFragmentByTag(CameraFragment.class.getSimpleName());
+                if (fc != null) {
+                    fc.takePhoto();
                 }
-            });
-            t.start();
+                break;
         }
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+//    @Override
+//    public void onWindowFocusChanged(boolean hasFocus) {
+//        super.onWindowFocusChanged(hasFocus);
+//        if (hasFocus) {
+//            actionButton.setVisibility(View.VISIBLE);
+//            actionButton.playShowAnimation();
+//        } else {
+//            actionButton.playHideAnimation();
+//        }
+//    }
 
-    @Override
-    public void onDetachedFromWindow() {
-        if (mSwipeRefreshLayout != null && mSwipeRefreshLayout.isShown()) {
-            mSwipeRefreshLayout.setRefreshing(false);
-            VolleySingleton.getInstance(getApplicationContext()).cancelPendingRequests(TAG);
+    public void clearBackStack() {
+        FragmentManager manager = getFragmentManager();
+        if (manager.getBackStackEntryCount() > 0) {
+            FragmentManager.BackStackEntry first = manager.getBackStackEntryAt(0);
+            manager.popBackStack(first.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
-        super.onDetachedFromWindow();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() == 1) {
+            if (this.lastBackPressTime < System.currentTimeMillis() - 4000) {
+                toast = Toast.makeText(this, "Press BACK again to exit", 4000);
+                toast.show();
+                this.lastBackPressTime = System.currentTimeMillis();
+            } else {
+                if (toast != null) {
+                    toast.cancel();
+                }
+                super.onBackPressed();
+            }
+        } else {
+            getFragmentManager().popBackStack();
+        }
+    }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Gson gson = new GsonBuilder()
-                .excludeFieldsWithoutExposeAnnotation()
-                .create();
-        String s = gson.toJson(picts);
-        outState.putString("picts", s);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            Gson gson = new GsonBuilder()
-                    .excludeFieldsWithoutExposeAnnotation()
-                    .create();
-            String s = savedInstanceState.getString("picts");
-            Pict[] obj = gson.fromJson(s, Pict[].class);
-            if (obj == null) {
-                picts = new ArrayList<Pict>();
-            } else {
-                picts = new ArrayList<Pict>(Arrays.asList(obj));
-            }
-            mAdapter = new PictyAdapter(this, picts);
-            recyclerView.setAdapter(mAdapter);
-        }
         super.onRestoreInstanceState(savedInstanceState);
     }
 
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+    public String getActiveFragment() {
+        String st;
+        Fragment f = getFragmentManager().findFragmentById(R.id.containerMain);
+        st = f.getClass().getSimpleName();
+        return st;
     }
 }
 

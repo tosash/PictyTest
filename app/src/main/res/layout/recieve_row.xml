@@ -40,9 +40,7 @@
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/txt_name"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginBottom="1dp">
+                    android:layout_below="@+id/txt_name">
 
                     <TextView
                         android:id="@+id/txt_Caption"
@@ -50,19 +48,19 @@
                         android:layout_height="wrap_content"
                         android:text="shot from"
                         android:textColor="#716B6B82"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
                         android:layout_gravity="right"
                         android:layout_toRightOf="@+id/img_flag"
                         android:layout_toEndOf="@+id/img_flag"
-                        android:layout_marginTop="7dp"
                         android:layout_marginLeft="5dp" />
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:id="@+id/img_flag"
                         android:src="@drawable/br"
-                        android:layout_marginLeft="2dp" />
+                        android:layout_marginLeft="2dp"
+                        android:scaleType="fitXY" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -78,29 +76,36 @@
 
                     <ImageButton
                         android:layout_width="60dp"
-                        android:layout_height="35dp"
+                        android:layout_height="25dp"
                         android:id="@+id/btn_reply"
                         android:layout_centerVertical="true"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginLeft="7dp"
                         android:layout_marginRight="2dp"
                         android:background="@drawable/bck_reply"
-                        android:src="@drawable/reply" />
+                        android:src="@drawable/reply"
+                        android:cropToPadding="false"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp" />
 
                     <ImageButton
                         android:layout_width="60dp"
-                        android:layout_height="35dp"
+                        android:layout_height="25dp"
                         android:id="@+id/btn_detail"
                         android:layout_centerVertical="true"
                         android:layout_toLeftOf="@+id/btn_reply"
                         android:layout_toStartOf="@+id/btn_reply"
                         android:background="@drawable/detail"
-                        android:layout_marginLeft="5dp" />
+                        android:layout_marginLeft="7dp" />
 
                     <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:id="@+id/img_os"
                         android:src="@drawable/apple"
                         android:layout_centerVertical="true"

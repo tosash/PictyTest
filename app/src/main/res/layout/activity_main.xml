@@ -1,23 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/id_main_layout"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_centerHorizontal="true">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar_default" />
-
-    <com.kido.pictytest.CustomSwype
-        android:id="@+id/id_swype_get_photos"
+    <RelativeLayout
+        android:id="@+id/id_main_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar">
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/cardList_get_photos"
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar_default" />
+
+        <FrameLayout
+            android:id="@+id/containerMain"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="vertical" />
-    </com.kido.pictytest.CustomSwype>
-</RelativeLayout>
+            android:layout_below="@+id/toolbar">
+
+        </FrameLayout>
+
+
+    </RelativeLayout>
+
+    <com.software.shell.fab.ActionButton
+        android:id="@+id/action_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="center_horizontal|bottom" />
+
+</android.support.design.widget.CoordinatorLayout>
