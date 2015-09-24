@@ -5,11 +5,13 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Display;
 import android.view.View;
 import android.widget.Toast;
 
@@ -116,20 +118,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void shotClick() {
-        String ss = getActiveFragment();
+        String ss = getActiveFragment().getClass().getSimpleName();
         switch (ss) {
             case "MainFragment":
                 Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                 vibrator.vibrate(50);
+                isFAB = false;
+                actionButton.setVisibility(View.INVISIBLE);
+                actionButton.playHideAnimation();
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
-                Fragment fragment = new CameraFragment();
+                Fragment fragment = new CameraFragmentOverlay();
                 fragmentTransaction.replace(R.id.containerMain, fragment, fragment.getClass().getSimpleName());
-                fragmentTransaction.addToBackStack(CameraFragment.class.getSimpleName());
+                fragmentTransaction.addToBackStack(CameraFragmentOverlay.class.getSimpleName());
                 fragmentTransaction.commit();
                 break;
-            case "CameraFragment":
-                CameraFragment fc = (CameraFragment) getFragmentManager().findFragmentByTag(CameraFragment.class.getSimpleName());
+            case "CameraFragmentOverlay":
+                CameraFragmentOverlay fc = (CameraFragmentOverlay) getFragmentManager().findFragmentByTag(CameraFragmentOverlay.class.getSimpleName());
                 if (fc != null) {
                     fc.takePhoto();
                 }
@@ -138,16 +143,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-//    @Override
-//    public void onWindowFocusChanged(boolean hasFocus) {
-//        super.onWindowFocusChanged(hasFocus);
-//        if (hasFocus) {
-//            actionButton.setVisibility(View.VISIBLE);
-//            actionButton.playShowAnimation();
-//        } else {
-//            actionButton.playHideAnimation();
-//        }
-//    }
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            if (getActiveFragment().getClass().getSimpleName().compareTo("CameraFragmentOverlay") == 0) {
+                CameraFragmentOverlay f = (CameraFragmentOverlay) getActiveFragment();
+                f.getBtnBack().setVisibility(View.VISIBLE);
+                f.getBtnFlash().setVisibility(View.VISIBLE);
+                f.getBtnRotare().setVisibility(View.VISIBLE);
+                f.getBtnBack().playShowAnimation();
+                f.getBtnFlash().playShowAnimation();
+                f.getBtnRotare().playShowAnimation();
+            }
+            actionButton.setVisibility(View.VISIBLE);
+            actionButton.playShowAnimation();
+        } else {
+            if (getActiveFragment().getClass().getSimpleName().compareTo("CameraFragmentOverlay") == 0) {
+                CameraFragmentOverlay f = (CameraFragmentOverlay) getActiveFragment();
+                f.getBtnBack().setVisibility(View.INVISIBLE);
+                f.getBtnFlash().setVisibility(View.INVISIBLE);
+                f.getBtnRotare().setVisibility(View.INVISIBLE);
+                f.getBtnBack().playHideAnimation();
+                f.getBtnFlash().playHideAnimation();
+                f.getBtnRotare().playHideAnimation();
+            }
+            actionButton.setVisibility(View.INVISIBLE);
+            actionButton.playHideAnimation();
+        }
+    }
 
     public void clearBackStack() {
         FragmentManager manager = getFragmentManager();
@@ -185,11 +209,14 @@ public class MainActivity extends AppCompatActivity {
         super.onRestoreInstanceState(savedInstanceState);
     }
 
-    public String getActiveFragment() {
+    public Fragment getActiveFragment() {
         String st;
         Fragment f = getFragmentManager().findFragmentById(R.id.containerMain);
-        st = f.getClass().getSimpleName();
-        return st;
+//        st = f.getClass().getSimpleName();
+        return f;
     }
+
+
+
 }
 

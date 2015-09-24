@@ -1,38 +1,29 @@
 <com.kido.pictytest.SlidingFrame xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#000000"
-    tools:context="com.kido.pictytest.PhotoFragment">
+    android:layout_width="0px"
+    android:layout_height="0px"
+    android:background="#FFFFFF"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.kido.pictytest.CameraFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <SurfaceView
+        android:id="@+id/id_stream"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:clickable="true"
+        />
 
-    <ImageView
-        android:id="@+id/imgView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/bottomPanelPhoto"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_gravity="center"
-        android:scaleType="fitXY"
-        android:visibility="visible" />
-
-    <com.github.lzyzsd.circleprogress.DonutProgress
-        android:id="@+id/donut_progress"
+    <com.software.shell.fab.ActionButton
+        android:id="@+id/aBtnFlash"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="144dp"
-        android:visibility="gone"
-        app:donut_background_color="#99ffffff"
-        app:donut_finished_color="#FF3518"
-        app:donut_finished_stroke_width="3dp"
-        app:donut_unfinished_color="#34FF03"
-        app:donut_unfinished_stroke_width="3dp" />
+        android:layout_gravity="center_horizontal|top"
+        android:layout_marginTop="@dimen/fab_margin" />
 
     <com.software.shell.fab.ActionButton
         android:id="@+id/aBtnBack"
@@ -45,7 +36,7 @@
         android:layout_marginLeft="@dimen/fab_margin" />
 
     <com.software.shell.fab.ActionButton
-        android:id="@+id/aBtnSave"
+        android:id="@+id/aBtnRotare"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

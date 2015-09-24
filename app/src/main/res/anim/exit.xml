@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <set>
     <objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
-        android:propertyName="Y"
-        android:valueType="floatType"
-        android:valueFrom="0"
-        android:valueTo="-1280"
-        android:duration="700"/>
+        android:duration="400"
+        android:interpolator="@android:anim/linear_interpolator"
+        android:propertyName="yFraction"
+        android:valueFrom="0.0"
+        android:valueTo="-1.0"
+        android:valueType="floatType" />
 </set>

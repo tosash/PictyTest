@@ -3,6 +3,7 @@ package com.kido.pictytest;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,12 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.github.lzyzsd.circleprogress.DonutProgress;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.software.shell.fab.ActionButton;
 
 import java.net.URL;
 
@@ -26,14 +26,13 @@ import java.net.URL;
 public class PhotoFragment extends Fragment {
     private static String bmp;
     private View rootView;
-    private ImageButton btnSave;
-    private ImageButton btnCancel;
+    private ActionButton btnSave;
+    private ActionButton btnCancel;
     private ImageView imgView;
-    private LinearLayout bottomPanel;
     private Context fContext;
     private MainActivity mActivity;
     private DonutProgress progress;
-    private int curProgress=1;
+    private int curProgress = 1;
 
 
     public PhotoFragment() {
@@ -54,7 +53,7 @@ public class PhotoFragment extends Fragment {
         Bundle arguments = getArguments();
         if (arguments != null) {
             String data = getArguments().getString("bmp");
-            if ((data != null) && (data != "")) {
+            if (data != null) {
                 bmp = data;
             }
         }
@@ -73,10 +72,21 @@ public class PhotoFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         fContext = getActivity().getApplicationContext();
         mActivity = (MainActivity) getActivity();
-        bottomPanel = (LinearLayout) rootView.findViewById(R.id.bottomPanelPhoto);
-        progress =(DonutProgress) rootView.findViewById(R.id.donut_progress);
+//        bottomPanel = (LinearLayout) rootView.findViewById(R.id.bottomPanelPhoto);
+        progress = (DonutProgress) rootView.findViewById(R.id.donut_progress);
         progress.setVisibility(View.GONE);
-        btnSave = (ImageButton) rootView.findViewById(R.id.btnSave);
+        btnSave = (ActionButton) rootView.findViewById(R.id.aBtnSave);
+
+
+        btnSave.setImageResource(R.drawable.ic_check);
+        btnSave.setButtonColor(Color.TRANSPARENT);
+        btnSave.setStrokeColor(Color.GREEN);
+        btnSave.setStrokeWidth(3.0f);
+        btnSave.setButtonColorPressed(Color.LTGRAY);
+        btnSave.removeShadow();
+        btnSave.setType(ActionButton.Type.BIG);
+        btnSave.setShowAnimation(ActionButton.Animations.FADE_IN);
+        btnSave.setHideAnimation(ActionButton.Animations.FADE_OUT);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,11 +94,23 @@ public class PhotoFragment extends Fragment {
 
             }
         });
-        btnCancel = (ImageButton) rootView.findViewById(R.id.btnCancel);
+        btnCancel = (ActionButton) rootView.findViewById(R.id.aBtnBack);
+        btnCancel.setImageResource(R.drawable.ic_cancel);
+        btnCancel.setButtonColor(Color.TRANSPARENT);
+        btnCancel.setStrokeColor(Color.RED);
+        btnCancel.setStrokeWidth(3.0f);
+        btnCancel.setButtonColorPressed(Color.LTGRAY);
+        btnCancel.removeShadow();
+        btnCancel.setType(ActionButton.Type.BIG);
+        btnCancel.setShowAnimation(ActionButton.Animations.FADE_IN);
+        btnCancel.setHideAnimation(ActionButton.Animations.FADE_OUT);
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btnCancel.playHideAnimation();
+                btnSave.playHideAnimation();
                 mActivity.onBackPressed();
+
             }
         });
         imgView = (ImageView) rootView.findViewById(R.id.imgView);
@@ -97,18 +119,42 @@ public class PhotoFragment extends Fragment {
         } catch (Exception e) {
 
         }
-
+        mActivity.setIsFAB(false);
+        mActivity.updateFAB();
         if (savedInstanceState == null) {
-            mActivity.setIsFAB(false);
-            mActivity.updateFAB();
             startAnimation();
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mActivity.setIsFAB(false);
+        mActivity.updateFAB();
+    }
+
+    public void startAnimation() {
+        Animation animation = AnimationUtils.loadAnimation(fContext, R.anim.bottom_to_camera);
+        Animation animationImg = AnimationUtils.loadAnimation(fContext, R.anim.image_show);
+//        bottomPanel.startAnimation(animation);
+        imgView.startAnimation(animationImg);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+    }
+
     private class SendFilesTask extends AsyncTask<URL, Integer, Integer> {
         protected Integer doInBackground(URL... urls) {
             int count = 100;
-            for (int i = 0; i < count; i=i+7) {
-                curProgress = curProgress+7;
+            for (int i = 0; i < count; i = i + 7) {
+                curProgress = curProgress + 7;
                 try {
                     Thread.currentThread();
                     Thread.sleep(100);
@@ -136,31 +182,6 @@ public class PhotoFragment extends Fragment {
             progress.setVisibility(View.GONE);
             mActivity.onBackPressed();
         }
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mActivity.setIsFAB(false);
-        mActivity.updateFAB();
-    }
-
-    public void startAnimation() {
-        Animation animation = AnimationUtils.loadAnimation(fContext, R.anim.bottom_to_camera);
-        Animation animationImg = AnimationUtils.loadAnimation(fContext, R.anim.image_show);
-        bottomPanel.startAnimation(animation);
-        imgView.startAnimation(animationImg);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onViewStateRestored(Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
     }
 
 

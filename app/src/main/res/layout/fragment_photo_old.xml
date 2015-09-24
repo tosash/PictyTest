@@ -8,6 +8,32 @@
 
     <!-- TODO: Update blank fragment layout -->
 
+    <LinearLayout
+        android:id="@+id/bottomPanelPhoto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center_horizontal|bottom"
+        android:background="#000000"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:background="#000000"
+            android:src="@drawable/ic_cancel" />
+
+        <ImageButton
+            android:id="@+id/btnSave"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:background="#000000"
+            android:src="@drawable/ic_check" />
+    </LinearLayout>
+
     <ImageView
         android:id="@+id/imgView"
         android:layout_width="match_parent"
@@ -33,25 +59,4 @@
         app:donut_finished_stroke_width="3dp"
         app:donut_unfinished_color="#34FF03"
         app:donut_unfinished_stroke_width="3dp" />
-
-    <com.software.shell.fab.ActionButton
-        android:id="@+id/aBtnBack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_gravity="bottom|left"
-        android:layout_marginBottom="@dimen/fab_margin"
-        android:layout_marginLeft="@dimen/fab_margin" />
-
-    <com.software.shell.fab.ActionButton
-        android:id="@+id/aBtnSave"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_gravity="bottom|right"
-        android:layout_marginBottom="@dimen/fab_margin"
-        android:layout_marginRight="@dimen/fab_margin" />
-
 </com.kido.pictytest.SlidingFrame>
